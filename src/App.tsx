@@ -47,7 +47,7 @@ function App() {
       </main>
       
       <footer className="text-center py-4 text-sm text-gray-500">
-        <p>© 2025 ElectriBill Calculator • Band A rate: ₦225/kWh</p>
+        <p>© 2025 ElectricBill Calculator By <a href='https://wa.me/2349066730744'>Ibroraheem</a>• Band A rate: ₦225/kWh</p>
       </footer>
     </div>
   );

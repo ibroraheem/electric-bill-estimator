@@ -7,7 +7,7 @@ const Header: React.FC = () => {
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center justify-center md:justify-start">
           <Zap size={32} className="text-amber-300 mr-3" />
-          <h1 className="text-2xl md:text-3xl font-bold">ElectriBill Calculator</h1>
+          <h1 className="text-2xl md:text-3xl font-bold">ElectricBill Calculator</h1>
         </div>
         
         <p className="mt-2 text-center md:text-left text-blue-100 max-w-2xl">
