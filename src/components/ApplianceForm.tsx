@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Zap } from 'lucide-react';
-import { Appliance } from '../types/appliance';
+import { Zap, Plus } from 'lucide-react';
+import { Appliance, StandardAppliance } from '../types/appliance';
+import { STANDARD_APPLIANCES } from '../utils/calculations';
 
 interface ApplianceFormProps {
   onAddAppliance: (appliance: Appliance) => void;
@@ -55,12 +56,39 @@ const ApplianceForm: React.FC<ApplianceFormProps> = ({ onAddAppliance }) => {
     setError('');
   };
 
+  const handleStandardApplianceSelect = (appliance: StandardAppliance) => {
+    setName(appliance.name);
+    setPowerWatts(appliance.powerWatts.toString());
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-md p-6 mb-6">
       <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
         <Zap className="mr-2 text-amber-500" size={20} />
         Add Appliance
       </h2>
+
+      <div className="mb-6">
+        <label htmlFor="standardAppliance" className="block text-sm font-medium text-gray-700 mb-2">
+          Select from Common Appliances
+        </label>
+        <select
+          id="standardAppliance"
+          onChange={(e) => {
+            const selected = STANDARD_APPLIANCES.find(a => a.id === e.target.value);
+            if (selected) handleStandardApplianceSelect(selected);
+          }}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value=""
+        >
+          <option value="">-- Select an appliance --</option>
+          {STANDARD_APPLIANCES.map(appliance => (
+            <option key={appliance.id} value={appliance.id}>
+              {appliance.name} ({appliance.powerWatts}W)
+            </option>
+          ))}
+        </select>
+      </div>
       
       <form onSubmit={handleSubmit}>
         {error && (
@@ -134,8 +162,9 @@ const ApplianceForm: React.FC<ApplianceFormProps> = ({ onAddAppliance }) => {
         
         <button
           type="submit"
-          className="w-full md:w-auto px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+          className="w-full md:w-auto px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors flex items-center justify-center"
         >
+          <Plus size={18} className="mr-1" />
           Add Appliance
         </button>
       </form>
