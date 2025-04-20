@@ -2,7 +2,7 @@ import { Appliance, ApplianceUsage, ElectricityBand, StandardAppliance } from '.
 
 // Constants
 export const ELECTRICITY_BANDS: ElectricityBand[] = [
-  { id: 'a', name: 'Band A', rate: 225.21 },  // 209.5 + 7.5%
+  { id: 'a', name: 'Band A', rate: 225 },  // 209.5 + 7.5%
   { id: 'b', name: 'Band B', rate: 68.88 },   // 64.07 + 7.5%
   { id: 'c', name: 'Band C', rate: 55.95 },   // 52.05 + 7.5%
   { id: 'd', name: 'Band D', rate: 46.52 },   // 43.27 + 7.5%
