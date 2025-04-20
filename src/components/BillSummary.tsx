@@ -1,15 +1,17 @@
 import React from 'react';
 import { LightbulbIcon, Receipt, BatteryChargingIcon } from 'lucide-react';
 import { Appliance } from '../types/appliance';
-import { calculateTotalMonthlyKWh, calculateTotalMonthlyCost, ELECTRICITY_RATE, formatCurrency, formatNumber } from '../utils/calculations';
+import { calculateTotalMonthlyKWh, calculateTotalMonthlyCost, formatCurrency, formatNumber } from '../utils/calculations';
 
 interface BillSummaryProps {
   appliances: Appliance[];
+  rate: number;
+  bandName: string;
 }
 
-const BillSummary: React.FC<BillSummaryProps> = ({ appliances }) => {
+const BillSummary: React.FC<BillSummaryProps> = ({ appliances, rate, bandName }) => {
   const totalMonthlyKWh = calculateTotalMonthlyKWh(appliances);
-  const totalMonthlyCost = calculateTotalMonthlyCost(appliances);
+  const totalMonthlyCost = calculateTotalMonthlyCost(appliances, rate);
   
   return (
     <div className="bg-white rounded-lg shadow-md p-6 mb-6">
@@ -32,8 +34,8 @@ const BillSummary: React.FC<BillSummaryProps> = ({ appliances }) => {
             <span className="text-sm font-medium text-amber-700">Electricity Rate</span>
             <LightbulbIcon size={16} className="text-amber-600" />
           </div>
-          <div className="text-2xl font-bold text-amber-900">₦{ELECTRICITY_RATE}/kWh</div>
-          <div className="text-xs text-amber-800 mt-1">Band A Tariff</div>
+          <div className="text-2xl font-bold text-amber-900">₦{rate}/kWh</div>
+          <div className="text-xs text-amber-800 mt-1">{bandName} Tariff</div>
         </div>
         
         <div className="bg-emerald-50 rounded-lg p-4">

@@ -1,14 +1,15 @@
 import React from 'react';
-import { Trash2, Clock, Zap, LucideCrop as LucideProps } from 'lucide-react';
+import { Trash2, Clock, Zap } from 'lucide-react';
 import { Appliance } from '../types/appliance';
 import { calculateMonthlyKWh, calculateMonthlyCost, formatCurrency, formatNumber } from '../utils/calculations';
 
 interface ApplianceListProps {
   appliances: Appliance[];
   onDeleteAppliance: (id: string) => void;
+  rate: number;
 }
 
-const ApplianceList: React.FC<ApplianceListProps> = ({ appliances, onDeleteAppliance }) => {
+const ApplianceList: React.FC<ApplianceListProps> = ({ appliances, onDeleteAppliance, rate }) => {
   if (appliances.length === 0) {
     return (
       <div className="bg-white rounded-lg shadow-md p-6 mb-6">
@@ -38,7 +39,7 @@ const ApplianceList: React.FC<ApplianceListProps> = ({ appliances, onDeleteAppli
           <tbody className="bg-white divide-y divide-gray-200">
             {appliances.map((appliance) => {
               const monthlyKWh = calculateMonthlyKWh(appliance);
-              const monthlyCost = calculateMonthlyCost(monthlyKWh);
+              const monthlyCost = calculateMonthlyCost(monthlyKWh, rate);
               
               return (
                 <tr key={appliance.id} className="hover:bg-gray-50 animate-fade-in">

@@ -11,3 +11,15 @@ export interface ApplianceUsage {
   monthlyKWh: number;
   monthlyCost: number;
 }
+
+export interface ElectricityBand {
+  id: string;
+  name: string;
+  rate: number;
+}
+
+export interface StandardAppliance {
+  id: string;
+  name: string;
+  powerWatts: number;
+}
