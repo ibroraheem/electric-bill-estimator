@@ -18,7 +18,7 @@ export const STANDARD_APPLIANCES: StandardAppliance[] = [
   { id: 'tv-lcd', name: 'LCD TV (32")', powerWatts: 100 },
   { id: 'fan', name: 'Ceiling Fan', powerWatts: 75 },
   { id: 'iron', name: 'Electric Iron', powerWatts: 1000 },
-  { id: 'microwave', name: 'Microwave Oven', powerWatts: 800 },
+  { id: 'microwave', name: 'Microwave Oven', powerWatts: 1000 },
   { id: 'water-heater', name: 'Water Heater', powerWatts: 3000 },
   { id: 'washing-machine', name: 'Washing Machine', powerWatts: 500 },
   { id: 'laptop', name: 'Laptop Computer', powerWatts: 65 },
