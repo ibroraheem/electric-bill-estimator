@@ -82,18 +82,18 @@ const ApplianceForm: React.FC<ApplianceFormProps> = ({ onAddAppliance }) => {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 sm:p-6">
       <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Add Appliance</h2>
 
       {/* Quick Add Presets */}
-      <div className="mb-6">
+      <div className="mb-4 sm:mb-6">
         <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Quick Add Presets</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-2">
           {Object.entries(HOUSEHOLD_PRESETS).map(([id, preset]) => (
             <button
               key={id}
               onClick={() => handleQuickAdd(id as keyof typeof HOUSEHOLD_PRESETS)}
-              className="px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+              className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
             >
               {preset.name}
             </button>
@@ -101,7 +101,7 @@ const ApplianceForm: React.FC<ApplianceFormProps> = ({ onAddAppliance }) => {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
         <div>
           <label htmlFor="appliance" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Select Appliance
@@ -116,7 +116,7 @@ const ApplianceForm: React.FC<ApplianceFormProps> = ({ onAddAppliance }) => {
                 setPowerWatts(appliance.powerWatts.toString());
               }
             }}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            className="w-full px-2 sm:px-3 py-1.5 sm:py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
           >
             <option value="">Select an appliance</option>
             {STANDARD_APPLIANCES.map(appliance => (
@@ -137,13 +137,13 @@ const ApplianceForm: React.FC<ApplianceFormProps> = ({ onAddAppliance }) => {
               id="power"
               value={powerWatts}
               onChange={(e) => setPowerWatts(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              className="w-full px-2 sm:px-3 py-1.5 sm:py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               placeholder="Enter power rating"
               min="1"
               required
             />
-            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-              <Info className="h-4 w-4 text-gray-400" />
+            <div className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2">
+              <Info className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400" />
             </div>
           </div>
         </div>
@@ -157,7 +157,7 @@ const ApplianceForm: React.FC<ApplianceFormProps> = ({ onAddAppliance }) => {
             id="hours"
             value={hoursPerDay}
             onChange={(e) => setHoursPerDay(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            className="w-full px-2 sm:px-3 py-1.5 sm:py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
             placeholder="Enter hours per day"
             min="1"
             max="24"
@@ -174,7 +174,7 @@ const ApplianceForm: React.FC<ApplianceFormProps> = ({ onAddAppliance }) => {
             id="quantity"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            className="w-full px-2 sm:px-3 py-1.5 sm:py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
             placeholder="Enter quantity"
             min="1"
             required
@@ -182,16 +182,16 @@ const ApplianceForm: React.FC<ApplianceFormProps> = ({ onAddAppliance }) => {
         </div>
 
         {error && (
-          <div className="text-red-500 dark:text-red-400 text-sm">
+          <div className="text-red-500 dark:text-red-400 text-xs sm:text-sm">
             {error}
           </div>
         )}
 
         <button
           type="submit"
-          className="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors dark:focus:ring-offset-gray-800"
+          className="w-full flex items-center justify-center px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors dark:focus:ring-offset-gray-800"
         >
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
           Add Appliance
         </button>
       </form>
