@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
 import { Zap, Plus } from 'lucide-react';
 import { Appliance, StandardAppliance } from '../types/appliance';
-import { STANDARD_APPLIANCES } from '../utils/calculations';
+import { STANDARD_APPLIANCES, ELECTRICITY_BANDS } from '../utils/calculations';
 
 interface ApplianceFormProps {
   onAddAppliance: (appliance: Appliance) => void;
+  selectedBandId: string;
 }
 
-const ApplianceForm: React.FC<ApplianceFormProps> = ({ onAddAppliance }) => {
+const ApplianceForm: React.FC<ApplianceFormProps> = ({ onAddAppliance, selectedBandId }) => {
   const [name, setName] = useState('');
   const [powerWatts, setPowerWatts] = useState('');
   const [hoursPerDay, setHoursPerDay] = useState('');
   const [quantity, setQuantity] = useState('1');
   const [error, setError] = useState('');
+
+  const selectedBand = ELECTRICITY_BANDS.find(band => band.id === selectedBandId)!;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,8 +31,9 @@ const ApplianceForm: React.FC<ApplianceFormProps> = ({ onAddAppliance }) => {
       return;
     }
     
-    if (!hoursPerDay || parseFloat(hoursPerDay) <= 0 || parseFloat(hoursPerDay) > 24) {
-      setError('Please enter valid hours (1-24)');
+    const hours = parseFloat(hoursPerDay);
+    if (!hoursPerDay || hours <= 0 || hours > selectedBand.maxHours) {
+      setError(`Hours must be between 1 and ${selectedBand.maxHours} for ${selectedBand.name}`);
       return;
     }
     
@@ -43,7 +47,7 @@ const ApplianceForm: React.FC<ApplianceFormProps> = ({ onAddAppliance }) => {
       id: Date.now().toString(),
       name: name.trim(),
       powerWatts: parseFloat(powerWatts),
-      hoursPerDay: parseFloat(hoursPerDay),
+      hoursPerDay: hours,
       quantity: parseInt(quantity)
     };
     
@@ -129,7 +133,7 @@ const ApplianceForm: React.FC<ApplianceFormProps> = ({ onAddAppliance }) => {
           
           <div>
             <label htmlFor="hoursPerDay" className="block text-sm font-medium text-gray-700 mb-1">
-              Hours Used Per Day
+              Hours Used Per Day (Max: {selectedBand.maxHours} for {selectedBand.name})
             </label>
             <input
               type="number"
@@ -139,7 +143,7 @@ const ApplianceForm: React.FC<ApplianceFormProps> = ({ onAddAppliance }) => {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="e.g., 5"
               min="0.1"
-              max="24"
+              max={selectedBand.maxHours}
               step="0.1"
             />
           </div>

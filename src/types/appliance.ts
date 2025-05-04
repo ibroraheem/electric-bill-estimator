@@ -16,6 +16,7 @@ export interface ElectricityBand {
   id: string;
   name: string;
   rate: number;
+  maxHours: number;
 }
 
 export interface StandardAppliance {

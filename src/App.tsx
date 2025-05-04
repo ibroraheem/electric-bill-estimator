@@ -65,7 +65,7 @@ function App() {
           </select>
         </div>
 
-        <ApplianceForm onAddAppliance={handleAddAppliance} />
+        <ApplianceForm onAddAppliance={handleAddAppliance} selectedBandId={selectedBandId} />
         
         <div className="grid grid-cols-1 gap-6 mb-6">
           <BillSummary appliances={appliances} rate={selectedBand.rate} bandName={selectedBand.name} />
