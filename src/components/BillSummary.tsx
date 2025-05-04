@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Zap, Download, TrendingDown, AlertCircle } from 'lucide-react';
 import { formatCurrency, formatNumber, calculateUsageAnalytics, generatePDF } from '../utils/calculations';
 import { Appliance, ElectricityBand } from '../types/appliance';
-import EnergySavingTips from './EnergySavingTips';
+import EnergySavingTips from './EnergySavingTips.tsx';
 
 interface BillSummaryProps {
   appliances: Appliance[];
