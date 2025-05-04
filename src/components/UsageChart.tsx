@@ -15,14 +15,14 @@ interface UsageChartProps {
 const UsageChart: React.FC<UsageChartProps> = ({ appliances }) => {
   if (appliances.length === 0) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+        <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
           <PieChart className="mr-2 text-cyan-500" size={20} />
           Energy Usage Breakdown
         </h2>
-        <div className="flex flex-col items-center justify-center py-10">
-          <Info size={32} className="text-gray-300 mb-2" />
-          <p className="text-gray-500 text-center">Add appliances to see your energy usage breakdown</p>
+        <div className="flex flex-col items-center justify-center py-8">
+          <Info size={24} className="text-gray-400 dark:text-gray-500 mb-2" />
+          <p className="text-sm text-gray-500 dark:text-gray-400 text-center">Add appliances to see your energy usage breakdown</p>
         </div>
       </div>
     );
@@ -104,17 +104,17 @@ const UsageChart: React.FC<UsageChartProps> = ({ appliances }) => {
   };
   
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+      <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
         <PieChart className="mr-2 text-cyan-500" size={20} />
         Energy Usage Breakdown
       </h2>
       
-      <div className="h-[300px] md:h-[400px]">
+      <div className="h-[300px]">
         <Pie data={chartData} options={chartOptions} />
       </div>
       
-      <div className="mt-4 text-xs text-gray-500 text-center">
+      <div className="mt-4 text-xs text-gray-500 dark:text-gray-400 text-center">
         Hover/tap on chart segments for detailed information
       </div>
     </div>
