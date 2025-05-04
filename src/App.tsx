@@ -5,42 +5,37 @@ import ApplianceForm from './components/ApplianceForm';
 import ApplianceList from './components/ApplianceList';
 import BillSummary from './components/BillSummary';
 import UsageChart from './components/UsageChart';
-import { Appliance } from './types/appliance';
+import { Appliance, ElectricityBand } from './types/appliance';
 import { ELECTRICITY_BANDS } from './utils/calculations';
 
 function App() {
-  // Load appliances from localStorage or start with empty array
   const [appliances, setAppliances] = useState<Appliance[]>(() => {
-    const savedAppliances = localStorage.getItem('appliances');
-    return savedAppliances ? JSON.parse(savedAppliances) : [];
+    const saved = localStorage.getItem('appliances');
+    return saved ? JSON.parse(saved) : [];
   });
 
-  // Load selected band from localStorage or default to Band A
-  const [selectedBandId, setSelectedBandId] = useState(() => {
-    const savedBand = localStorage.getItem('selectedBand');
-    return savedBand || 'a';
+  const [selectedBandId, setSelectedBandId] = useState<string>(() => {
+    const saved = localStorage.getItem('selectedBandId');
+    return saved || ELECTRICITY_BANDS[0].id;
   });
 
-  // Load dark mode preference from localStorage or system preference
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    const savedMode = localStorage.getItem('darkMode');
-    if (savedMode !== null) return savedMode === 'true';
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    const saved = localStorage.getItem('isDarkMode');
+    return saved ? JSON.parse(saved) : false;
   });
 
-  // Save appliances to localStorage whenever they change
+  const selectedBand = ELECTRICITY_BANDS.find(band => band.id === selectedBandId)!;
+
   useEffect(() => {
     localStorage.setItem('appliances', JSON.stringify(appliances));
   }, [appliances]);
 
-  // Save selected band to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('selectedBand', selectedBandId);
+    localStorage.setItem('selectedBandId', selectedBandId);
   }, [selectedBandId]);
 
-  // Save dark mode preference to localStorage
   useEffect(() => {
-    localStorage.setItem('darkMode', isDarkMode.toString());
+    localStorage.setItem('isDarkMode', JSON.stringify(isDarkMode));
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
     } else {
@@ -48,17 +43,21 @@ function App() {
     }
   }, [isDarkMode]);
 
-  // Add a new appliance
   const handleAddAppliance = (appliance: Appliance) => {
-    setAppliances([...appliances, appliance]);
+    setAppliances(prev => [...prev, appliance]);
   };
 
-  // Delete an appliance
-  const handleDeleteAppliance = (id: string) => {
-    setAppliances(appliances.filter(appliance => appliance.id !== id));
+  const handleRemoveAppliance = (id: string) => {
+    setAppliances(prev => prev.filter(appliance => appliance.id !== id));
   };
 
-  const selectedBand = ELECTRICITY_BANDS.find(band => band.id === selectedBandId)!;
+  const handleUpdateAppliance = (id: string, updatedAppliance: Partial<Appliance>) => {
+    setAppliances(prev =>
+      prev.map(appliance =>
+        appliance.id === id ? { ...appliance, ...updatedAppliance } : appliance
+      )
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
@@ -86,7 +85,7 @@ function App() {
 
           <button
             onClick={() => setIsDarkMode(!isDarkMode)}
-            className="p-2 rounded-lg bg-white dark:bg-gray-800 shadow-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            className="p-2 rounded-lg bg-white dark:bg-gray-800 shadow-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors relative group"
             aria-label="Toggle dark mode"
           >
             {isDarkMode ? (
@@ -94,20 +93,31 @@ function App() {
             ) : (
               <Moon className="w-6 h-6 text-gray-700" />
             )}
+            <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+              {isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            </span>
           </button>
         </div>
 
-        <ApplianceForm onAddAppliance={handleAddAppliance} selectedBandId={selectedBandId} />
+        <ApplianceForm
+          onAddAppliance={handleAddAppliance}
+          selectedBandId={selectedBandId}
+          onBandChange={setSelectedBandId}
+        />
         
         <div className="grid grid-cols-1 gap-6 mb-6">
-          <BillSummary appliances={appliances} rate={selectedBand.rate} bandName={selectedBand.name} />
+          <BillSummary
+            appliances={appliances}
+            selectedBand={selectedBand}
+          />
           <UsageChart appliances={appliances} />
         </div>
         
-        <ApplianceList 
-          appliances={appliances} 
-          onDeleteAppliance={handleDeleteAppliance}
-          rate={selectedBand.rate}
+        <ApplianceList
+          appliances={appliances}
+          onRemoveAppliance={handleRemoveAppliance}
+          onUpdateAppliance={handleUpdateAppliance}
+          selectedBand={selectedBand}
         />
       </main>
       

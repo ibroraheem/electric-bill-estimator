@@ -24,3 +24,9 @@ export interface StandardAppliance {
   name: string;
   powerWatts: number;
 }
+
+export interface EnergySavingTip {
+  title: string;
+  tip: string;
+  potentialSavings: number;
+}
