@@ -117,7 +117,7 @@ function App() {
                 {appliances.length > 0 && (
                   <button
                     onClick={handleDownloadPDF}
-                    className="flex items-center justify-center px-4 py-2.5 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors dark:focus:ring-offset-gray-800 w-full sm:w-auto shadow-sm"
+                    className="flex items-center justify-center px-4 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-medium rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors dark:focus:ring-offset-gray-800 w-full sm:w-auto shadow-sm"
                   >
                     <Download className="h-4 w-4 mr-2" />
                     Download Report
@@ -145,7 +145,7 @@ function App() {
                       </div>
                       <button
                         onClick={() => handleRemoveAppliance(appliance.id)}
-                        className="flex-shrink-0 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 p-2 -m-1"
+                        className="flex-shrink-0 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 p-2 -m-1"
                         aria-label={`Remove ${appliance.name}`}
                       >
                         <Trash2 className="h-5 w-5" />
