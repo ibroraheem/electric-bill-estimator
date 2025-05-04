@@ -23,6 +23,7 @@ export interface StandardAppliance {
   id: string;
   name: string;
   powerWatts: number;
+  category: 'essential' | 'comfort' | 'luxury' | 'other';
 }
 
 export interface EnergySavingTip {
