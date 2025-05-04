@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Plus, Info } from 'lucide-react';
-import { STANDARD_APPLIANCES, HOUSEHOLD_PRESETS, ELECTRICITY_BANDS } from '../utils/calculations';
-import { Appliance, ElectricityBand } from '../types/appliance';
+import { STANDARD_APPLIANCES, HOUSEHOLD_PRESETS, ELECTRICITY_BANDS, getBandSpecificPresets } from '../utils/calculations';
+import { Appliance } from '../types/appliance';
 
 interface ApplianceFormProps {
   onAddAppliance: (appliance: Appliance) => void;
@@ -21,6 +21,7 @@ const ApplianceForm: React.FC<ApplianceFormProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   const selectedBand = ELECTRICITY_BANDS.find(band => band.id === selectedBandId)!;
+  const bandPresets = useMemo(() => getBandSpecificPresets(selectedBandId), [selectedBandId]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,18 +65,8 @@ const ApplianceForm: React.FC<ApplianceFormProps> = ({
   };
 
   const handleQuickAdd = (presetId: keyof typeof HOUSEHOLD_PRESETS) => {
-    const preset = HOUSEHOLD_PRESETS[presetId];
+    const preset = bandPresets[presetId];
     if (!preset) return;
-
-    // Check if preset is compatible with current band
-    const incompatibleAppliances = preset.appliances.filter(appliance => 
-      appliance.hoursPerDay > selectedBand.maxHours
-    );
-
-    if (incompatibleAppliances.length > 0) {
-      setError(`Some appliances in this preset exceed the maximum hours (${selectedBand.maxHours}) for ${selectedBand.name}`);
-      return;
-    }
 
     preset.appliances.forEach(appliance => {
       const standardAppliance = STANDARD_APPLIANCES.find(a => a.id === appliance.id);
@@ -112,26 +103,16 @@ const ApplianceForm: React.FC<ApplianceFormProps> = ({
           </span>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-          {Object.entries(HOUSEHOLD_PRESETS).map(([id, preset]) => {
-            const isCompatible = preset.appliances.every(appliance => 
-              appliance.hoursPerDay <= selectedBand.maxHours
-            );
-            return (
-              <button
-                key={id}
-                onClick={() => handleQuickAdd(id as keyof typeof HOUSEHOLD_PRESETS)}
-                disabled={!isCompatible}
-                className={`px-3 py-2 text-sm rounded-md transition-colors ${
-                  isCompatible
-                    ? 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                    : 'bg-gray-50 dark:bg-gray-800 text-gray-400 dark:text-gray-500 cursor-not-allowed'
-                }`}
-                title={!isCompatible ? `This preset is not compatible with ${selectedBand.name} (max ${selectedBand.maxHours}h/day)` : preset.name}
-              >
-                {preset.name}
-              </button>
-            );
-          })}
+          {Object.entries(bandPresets).map(([id, preset]) => (
+            <button
+              key={id}
+              onClick={() => handleQuickAdd(id as keyof typeof HOUSEHOLD_PRESETS)}
+              className="px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+              title={preset.name}
+            >
+              {preset.name}
+            </button>
+          ))}
         </div>
       </div>
 

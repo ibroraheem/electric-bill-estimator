@@ -307,72 +307,56 @@ export const generateEnergySavingTips = (appliances: Appliance[]): EnergySavingT
   return tips;
 };
 
-export const HOUSEHOLD_PRESETS = {
-  'basic-home': {
-    name: 'Basic Home Setup',
-    description: 'Essential appliances for a basic Nigerian home',
+export const HOUSEHOLD_PRESETS: Record<string, { name: string; appliances: Array<{ id: string; hoursPerDay: number; quantity: number }> }> = {
+  basic: {
+    name: 'Basic Household',
     appliances: [
-      { id: 'fridge-single', quantity: 1, hoursPerDay: 24 },
-      { id: 'fan-ceiling', quantity: 2, hoursPerDay: 12 },
-      { id: 'led-bulb-9w', quantity: 4, hoursPerDay: 6 },
-      { id: 'tv-led-32', quantity: 1, hoursPerDay: 4 },
-      { id: 'decoder-dstv', quantity: 1, hoursPerDay: 4 },
-      { id: 'phone-charger', quantity: 2, hoursPerDay: 3 }
+      { id: 'lighting', hoursPerDay: 6, quantity: 5 },
+      { id: 'fan', hoursPerDay: 8, quantity: 2 },
+      { id: 'tv', hoursPerDay: 4, quantity: 1 },
+      { id: 'fridge', hoursPerDay: 24, quantity: 1 }
     ]
   },
-  'home-office': {
-    name: 'Home Office Setup',
-    description: 'Ideal for remote work and business operations',
+  standard: {
+    name: 'Standard Household',
     appliances: [
-      { id: 'laptop', quantity: 1, hoursPerDay: 8 },
-      { id: 'desktop', quantity: 1, hoursPerDay: 8 },
-      { id: 'printer', quantity: 1, hoursPerDay: 2 },
-      { id: 'router', quantity: 1, hoursPerDay: 24 },
-      { id: 'modem', quantity: 1, hoursPerDay: 24 },
-      { id: 'fan-ceiling', quantity: 1, hoursPerDay: 8 },
-      { id: 'led-bulb-9w', quantity: 2, hoursPerDay: 8 }
+      { id: 'lighting', hoursPerDay: 8, quantity: 8 },
+      { id: 'fan', hoursPerDay: 12, quantity: 3 },
+      { id: 'tv', hoursPerDay: 6, quantity: 1 },
+      { id: 'fridge', hoursPerDay: 24, quantity: 1 },
+      { id: 'washing_machine', hoursPerDay: 2, quantity: 1 }
     ]
   },
-  'entertainment': {
-    name: 'Entertainment Setup',
-    description: 'For homes with multiple entertainment devices',
+  premium: {
+    name: 'Premium Household',
     appliances: [
-      { id: 'tv-led-55', quantity: 1, hoursPerDay: 6 },
-      { id: 'sound-system', quantity: 1, hoursPerDay: 4 },
-      { id: 'gaming-console', quantity: 1, hoursPerDay: 3 },
-      { id: 'decoder-dstv', quantity: 1, hoursPerDay: 6 },
-      { id: 'router', quantity: 1, hoursPerDay: 24 },
-      { id: 'led-bulb-9w', quantity: 6, hoursPerDay: 6 }
-    ]
-  },
-  'business': {
-    name: 'Business Setup',
-    description: 'For small businesses and shops',
-    appliances: [
-      { id: 'fridge-double', quantity: 1, hoursPerDay: 24 },
-      { id: 'freezer-large', quantity: 1, hoursPerDay: 24 },
-      { id: 'fan-ceiling', quantity: 2, hoursPerDay: 12 },
-      { id: 'led-bulb-12w', quantity: 8, hoursPerDay: 12 },
-      { id: 'water-dispenser', quantity: 1, hoursPerDay: 12 },
-      { id: 'printer', quantity: 1, hoursPerDay: 4 },
-      { id: 'router', quantity: 1, hoursPerDay: 24 }
-    ]
-  },
-  'luxury': {
-    name: 'Luxury Home Setup',
-    description: 'High-end home with premium appliances',
-    appliances: [
-      { id: 'ac-1.5hp', quantity: 2, hoursPerDay: 8 },
-      { id: 'fridge-double', quantity: 1, hoursPerDay: 24 },
-      { id: 'freezer-large', quantity: 1, hoursPerDay: 24 },
-      { id: 'tv-led-55', quantity: 1, hoursPerDay: 6 },
-      { id: 'sound-system', quantity: 1, hoursPerDay: 4 },
-      { id: 'washing-machine-large', quantity: 1, hoursPerDay: 2 },
-      { id: 'water-heater', quantity: 1, hoursPerDay: 2 },
-      { id: 'led-bulb-12w', quantity: 10, hoursPerDay: 8 },
-      { id: 'inverter-medium', quantity: 1, hoursPerDay: 24 }
+      { id: 'lighting', hoursPerDay: 10, quantity: 12 },
+      { id: 'fan', hoursPerDay: 16, quantity: 4 },
+      { id: 'tv', hoursPerDay: 8, quantity: 2 },
+      { id: 'fridge', hoursPerDay: 24, quantity: 1 },
+      { id: 'washing_machine', hoursPerDay: 3, quantity: 1 },
+      { id: 'ac', hoursPerDay: 8, quantity: 2 }
     ]
   }
+};
+
+// Function to get band-specific presets
+export const getBandSpecificPresets = (bandId: string) => {
+  const band = ELECTRICITY_BANDS.find(b => b.id === bandId);
+  if (!band) return HOUSEHOLD_PRESETS;
+
+  const maxHours = band.maxHours;
+  
+  return Object.entries(HOUSEHOLD_PRESETS).reduce((acc, [key, preset]) => {
+    acc[key] = {
+      name: preset.name,
+      appliances: preset.appliances.map(appliance => ({
+        ...appliance,
+        hoursPerDay: Math.min(appliance.hoursPerDay, maxHours)
+      }))
+    };
+    return acc;
+  }, {} as typeof HOUSEHOLD_PRESETS);
 };
 
 export interface UsageAnalytics {
