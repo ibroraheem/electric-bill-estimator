@@ -92,3 +92,72 @@ export const formatCurrency = (amount: number): string => {
 export const formatNumber = (num: number): string => {
   return num.toFixed(2);
 };
+
+/**
+ * Generate energy-saving tips based on appliance usage
+ */
+export const generateEnergySavingTips = (appliances: Appliance[]): { title: string; tip: string; potentialSavings: number }[] => {
+  const tips: { title: string; tip: string; potentialSavings: number }[] = [];
+  const selectedBand = ELECTRICITY_BANDS.find(band => band.id === 'a')!; // Using Band A rate for calculations
+
+  // Check for high-power appliances
+  const highPowerAppliances = appliances.filter(a => a.powerWatts >= 1000);
+  highPowerAppliances.forEach(appliance => {
+    if (appliance.hoursPerDay > 4) {
+      const currentCost = calculateMonthlyCost(calculateMonthlyKWh(appliance), selectedBand.rate);
+      const reducedHours = Math.min(appliance.hoursPerDay - 2, 4); // Reduce by 2 hours, but not below 4
+      const reducedAppliance = { ...appliance, hoursPerDay: reducedHours };
+      const reducedCost = calculateMonthlyCost(calculateMonthlyKWh(reducedAppliance), selectedBand.rate);
+      const savings = currentCost - reducedCost;
+
+      tips.push({
+        title: `Reduce ${appliance.name} Usage`,
+        tip: `Consider reducing usage from ${appliance.hoursPerDay} to ${reducedHours} hours per day. This high-power appliance (${appliance.powerWatts}W) consumes significant energy.`,
+        potentialSavings: savings
+      });
+    }
+  });
+
+  // Check for multiple similar appliances
+  const applianceGroups = appliances.reduce((groups, appliance) => {
+    const key = appliance.name.toLowerCase();
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(appliance);
+    return groups;
+  }, {} as Record<string, Appliance[]>);
+
+  Object.entries(applianceGroups).forEach(([name, group]) => {
+    if (group.length > 1) {
+      const totalCost = group.reduce((sum, appliance) => 
+        sum + calculateMonthlyCost(calculateMonthlyKWh(appliance), selectedBand.rate), 0);
+      const potentialSavings = totalCost * 0.2; // Assuming 20% savings by consolidating
+
+      tips.push({
+        title: `Consolidate ${name} Usage`,
+        tip: `You have ${group.length} ${name}s. Consider consolidating their usage to reduce energy consumption.`,
+        potentialSavings
+      });
+    }
+  });
+
+  // Check for appliances that could be replaced with more efficient models
+  appliances.forEach(appliance => {
+    const standardAppliance = STANDARD_APPLIANCES.find(sa => 
+      sa.name.toLowerCase().includes(appliance.name.toLowerCase()));
+    
+    if (standardAppliance && appliance.powerWatts > standardAppliance.powerWatts * 1.2) {
+      const currentCost = calculateMonthlyCost(calculateMonthlyKWh(appliance), selectedBand.rate);
+      const efficientAppliance = { ...appliance, powerWatts: standardAppliance.powerWatts };
+      const efficientCost = calculateMonthlyCost(calculateMonthlyKWh(efficientAppliance), selectedBand.rate);
+      const savings = currentCost - efficientCost;
+
+      tips.push({
+        title: `Upgrade ${appliance.name}`,
+        tip: `Consider upgrading to a more energy-efficient model. Current model uses ${appliance.powerWatts}W, while efficient models use around ${standardAppliance.powerWatts}W.`,
+        potentialSavings: savings
+      });
+    }
+  });
+
+  return tips.sort((a, b) => b.potentialSavings - a.potentialSavings);
+};
