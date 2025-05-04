@@ -72,15 +72,15 @@ function App() {
   return (
     <div className={`min-h-screen ${isDarkMode ? 'dark' : ''}`}>
       <div className="bg-white dark:bg-gray-900 min-h-screen">
-        <header className="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+        <header className="bg-white dark:bg-gray-800 sticky top-0 z-10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
             <div className="flex justify-between items-center">
               <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                 ElectricBill Calculator
               </h1>
               <button
                 onClick={() => setIsDarkMode(!isDarkMode)}
-                className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                className="p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
               >
                 {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
@@ -89,9 +89,9 @@ function App() {
           </div>
         </header>
 
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           {/* Appliance Form */}
-          <div className="mb-6 sm:mb-8">
+          <div className="mb-4">
             <ApplianceForm 
               onAddAppliance={handleAddAppliance} 
               selectedBandId={selectedBandId}
@@ -100,24 +100,23 @@ function App() {
           </div>
 
           {/* Bill Summary and Appliance List Side by Side */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 mb-6 sm:mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
             {/* Bill Summary */}
             <div className="order-2 lg:order-1">
               <BillSummary 
                 appliances={appliances} 
-                selectedBandId={selectedBandId}
-                onBandChange={handleBandChange}
+                selectedBand={selectedBand}
               />
             </div>
 
             {/* Appliance List */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 order-1 lg:order-2">
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
+            <div className="bg-white dark:bg-gray-800 order-1 lg:order-2">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-2">
                 <h2 className="text-lg font-semibold text-gray-800 dark:text-white">Your Appliances</h2>
                 {appliances.length > 0 && (
                   <button
                     onClick={handleDownloadPDF}
-                    className="flex items-center justify-center px-4 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-medium rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors dark:focus:ring-offset-gray-800 w-full sm:w-auto shadow-sm"
+                    className="flex items-center justify-center px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-medium hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors w-full sm:w-auto"
                   >
                     <Download className="h-4 w-4 mr-2" />
                     Download Report
@@ -129,11 +128,11 @@ function App() {
                   No appliances added yet. Add some appliances to see your bill estimate.
                 </p>
               ) : (
-                <div className="space-y-3 max-h-[60vh] overflow-y-auto pr-1">
+                <div className="space-y-2 max-h-[60vh] overflow-y-auto">
                   {appliances.map((appliance, index) => (
                     <div
                       key={index}
-                      className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                      className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
                     >
                       <div className="flex-1 min-w-0 mr-4">
                         <h3 className="font-medium text-gray-800 dark:text-white truncate">
@@ -159,8 +158,8 @@ function App() {
 
           {/* Energy Saving Tips */}
           {appliances.length > 0 && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
-              <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Energy Saving Tips</h2>
+            <div className="bg-white dark:bg-gray-800">
+              <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">Energy Saving Tips</h2>
               <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
                 <UsageChart appliances={appliances} />
               </div>
@@ -169,7 +168,7 @@ function App() {
         </main>
 
         {/* Footer */}
-        <footer className="mt-8 py-4 text-center text-sm text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700">
+        <footer className="mt-4 py-2 text-center text-sm text-gray-500 dark:text-gray-400">
           <p>© 2024 ElectricBill Calculator • {selectedBand.name} rate: ₦{selectedBand.rate}/kWh</p>
         </footer>
       </div>
