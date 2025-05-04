@@ -1,18 +1,16 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { Plus, Info } from 'lucide-react';
-import { STANDARD_APPLIANCES, HOUSEHOLD_PRESETS, ELECTRICITY_BANDS, getBandSpecificPresets } from '../utils/calculations';
+import { STANDARD_APPLIANCES, ELECTRICITY_BANDS } from '../utils/calculations';
 import { Appliance } from '../types/appliance';
 
 interface ApplianceFormProps {
   onAddAppliance: (appliance: Appliance) => void;
   selectedBandId: string;
-  onBandChange: (bandId: string) => void;
 }
 
 const ApplianceForm: React.FC<ApplianceFormProps> = ({ 
   onAddAppliance, 
-  selectedBandId,
-  onBandChange 
+  selectedBandId
 }) => {
   const [selectedAppliance, setSelectedAppliance] = useState<string>('');
   const [powerWatts, setPowerWatts] = useState<string>('');
@@ -21,7 +19,6 @@ const ApplianceForm: React.FC<ApplianceFormProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   const selectedBand = ELECTRICITY_BANDS.find(band => band.id === selectedBandId)!;
-  const bandPresets = useMemo(() => getBandSpecificPresets(selectedBandId), [selectedBandId]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,24 +61,6 @@ const ApplianceForm: React.FC<ApplianceFormProps> = ({
     resetForm();
   };
 
-  const handleQuickAdd = (presetId: keyof typeof HOUSEHOLD_PRESETS) => {
-    const preset = bandPresets[presetId];
-    if (!preset) return;
-
-    preset.appliances.forEach(appliance => {
-      const standardAppliance = STANDARD_APPLIANCES.find(a => a.id === appliance.id);
-      if (standardAppliance) {
-        onAddAppliance({
-          id: appliance.id,
-          name: standardAppliance.name,
-          powerWatts: standardAppliance.powerWatts,
-          hoursPerDay: appliance.hoursPerDay,
-          quantity: appliance.quantity
-        });
-      }
-    });
-  };
-
   const resetForm = () => {
     setSelectedAppliance('');
     setPowerWatts('');
@@ -93,28 +72,6 @@ const ApplianceForm: React.FC<ApplianceFormProps> = ({
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
       <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Add Appliance</h2>
-
-      {/* Quick Add Presets */}
-      <div className="mb-4">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">Quick Add Presets</h3>
-          <span className="text-xs text-gray-500 dark:text-gray-400">
-            Max {selectedBand.maxHours}h/day for {selectedBand.name}
-          </span>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-          {Object.entries(bandPresets).map(([id, preset]) => (
-            <button
-              key={id}
-              onClick={() => handleQuickAdd(id as keyof typeof HOUSEHOLD_PRESETS)}
-              className="px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-              title={preset.name}
-            >
-              {preset.name}
-            </button>
-          ))}
-        </div>
-      </div>
 
       <form onSubmit={handleSubmit} className="space-y-3">
         <div>
