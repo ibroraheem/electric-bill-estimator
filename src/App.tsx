@@ -37,9 +37,11 @@ function App() {
   useEffect(() => {
     localStorage.setItem('isDarkMode', JSON.stringify(isDarkMode));
     if (isDarkMode) {
+      document.documentElement.classList.remove('light');
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
     }
   }, [isDarkMode]);
 
